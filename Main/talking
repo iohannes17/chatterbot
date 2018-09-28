@@ -1,0 +1,71 @@
+from chatterbot import ChatBot  # method to train chatbot
+from chatterbot.trainers import ListTrainer  # import chatbot
+import os
+import speech_handler as sphand
+import speech_recognition as sr
+
+speech = sr.Recognizer()
+bot = ChatBot('Luna')
+bot.set_trainer(ListTrainer)
+
+# luna=pyttsx3.init() #initialize engine
+
+
+for _file in os.listdir('files'):  # open files inside the folder
+    chats = open('files/' + _file, 'r').readlines()  # read eACH LINES OF FILE AND PLACE THAT IN CHAT
+    bot.train(chats)  # Train the chats to our luna
+
+
+# name = input("Luna: What is your name? \n")
+# sphand.luna.say('Welcome..................' + name)
+# sphand.luna.runAndWait()
+
+def speak_text_cmd(cmd):
+    sphand.luna.say(cmd)
+    sphand.luna.runAndWait()
+
+
+def read_voice_cmd():
+    voice_text = ''
+    with sr.Microphone() as source:
+        audio = speech.listen(source)
+
+    try:
+        voice_text = speech.recognize_google(audio)
+    except sr.UnknownValueError:
+        pass
+    except sr.RequestError as e:
+        print('Network error')
+    return voice_text
+
+
+if __name__ == '__main__':
+    speak_text_cmd('Hello johnny....what shall we do today')
+
+    while True:
+        voice_note = read_voice_cmd()
+        print('cmd: {}'.format(voice_note))
+
+        # if 'hello' in voice_note:
+        #     speak_text_cmd('hello Sir..tell me something')
+
+        # elif 'chat' in voice_note:
+        #     request = read_voice_cmd()
+        #     response = bot.get_response(request)
+        #     sphand.luna.say(response)
+        #     print ('Luna:',response,'  \n')
+        #     sphand.luna.runAndWait()
+        #
+        #
+        #
+
+#
+#
+#
+# while True:
+#     request = input(name +':')
+#     response = bot.get_response(request)
+#     sphand.luna.say(response)
+#     print ('Luna:',response,'  \n') #prints the response or replies to the user
+#     sphand.luna.runAndWait()
+#
